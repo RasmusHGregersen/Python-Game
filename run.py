@@ -136,11 +136,11 @@ class Q_Learner(object): #from Learner
             out_x=direction[0]>=self.border_height or direction[0]<0
             check_tail=direction in snake[:-1]
             
-            if out_y==True: # off screen left or top
+            if out_y==True:
                 surrounding_list.append('1')
-            elif out_x==True: # off screen right or bottom
+            elif out_x==True: 
                 surrounding_list.append('1')
-            elif check_tail==True: # part of tail
+            elif check_tail==True: 
                 surrounding_list.append('1')
             else:
                 surrounding_list.append('0')
