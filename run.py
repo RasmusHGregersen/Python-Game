@@ -339,7 +339,8 @@ class SnakeGame():
 
         timer=15000*(1/self.speed)
         time_back=timer
-
+        
+        learner.Refresh_activity_log()
         while run:
                     
             if game_count>100:
