@@ -3,7 +3,7 @@ import json
 def q_table_template():
     a_str=''
     widths = ['0','1','-']
-    heights = ['2','3','-']
+    heights = ['0','1','-']
     hit_bound_list=[]
     for i in range(0,2):
         for j in range(0,2):
