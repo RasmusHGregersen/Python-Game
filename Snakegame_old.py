@@ -181,27 +181,35 @@ class SnakeGame():
                     game_count+=1
                 else:
                     #Game over printed
-                    game_over=self.game_over_font.render(f'Game over!',True,(255,0,0))
-                    game_over_rect = game_over.get_rect(center=(self.bounds[0]/2, self.bounds[1]/3))
+                    game_over=game_over_font.render(f'Game over!',True,(255,0,0))
+                    game_over_rect = game_over.get_rect(center=(self.bounds[0]/2, self.bounds[1]/6))
                     window.blit(game_over,game_over_rect)
 
-                    #Pres any key to play again
-                    go_again=self.small_font.render(f'Press any key to go again!',True,(255,0,0))
-                    go_again_rect=go_again.get_rect(center=(self.bounds[0]/2,self.bounds[1]*2/3))
-                    window.blit(go_again,go_again_rect)
+                    #Press to try again or go back to main menu
+                    again_button=Button((220,220,220),self.bounds[0]/4,self.bounds[1]/3,self.bounds[0]/2,self.bounds[1]/4,'Go again')
+                    again_button.draw(window)
+                    back_button = Button((220,220,220),self.bounds[0]/4,self.bounds[1]*2/3,self.bounds[0]/2,self.bounds[1]/4,'Back to menu')
+                    back_button.draw(window)
                     pygame.display.flip()
                     wait=True
                     while wait:
                         #Checks for input
                         for event in pygame.event.get():
-                            if event.type==pygame.KEYDOWN:
-                                snake.died()
-                                food.eaten()
-                                wait=False
+                            if event.type == pygame.MOUSEBUTTONUP:
+                                pos = pygame.mouse.get_pos()
+                                if back_button.isOver(pos):
+                                    run=False
+                                    wait=False
+                                    self.first_menu()
+                                elif again_button.isOver(pos):
+                                    wait=False
+                                    snake.died()
+                                    food.eaten()
                             if event.type==pygame.QUIT:
+                                wait=False
                                 run = False
-                                wait = False
-
+            if not run:
+                break
             #Background color - filled with black
             window.fill((0,0,0))
 
