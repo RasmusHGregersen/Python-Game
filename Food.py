@@ -5,7 +5,7 @@
 
 
 import random 
-import snake 
+import Snake 
 
 class Food():
     pixel_size = None
