@@ -4,8 +4,8 @@
 # In[4]:
 
 
-import snake
-import food
+import Snake
+import Food
 import random
 import pygame
 import Q_Learner
