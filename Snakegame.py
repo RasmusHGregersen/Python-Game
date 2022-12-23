@@ -78,7 +78,7 @@ class SnakeGame():
                 #Event handler
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        pygame.quit()
+                        run = False
                     #If keydown - if keydown is a direction, snake is steered
                     if event.type == pygame.KEYDOWN:
                         key_dic={pygame.K_UP:"UP",pygame.K_DOWN:"DOWN",pygame.K_RIGHT:"RIGHT",pygame.K_LEFT:"LEFT"}
@@ -129,7 +129,8 @@ class SnakeGame():
                                 food.eaten()
                                 wait=False
                             if event.type==pygame.QUIT:
-                                pygame.quit()
+                                run = False
+                                wait = False
 
             #Background color - filled with black
             window.fill((0,0,0))
@@ -160,5 +161,6 @@ class SnakeGame():
                 time_rect=time.get_rect(center=(self.bounds[0]*(18/20),self.bounds[1]/20))
                 window.blit(time,time_rect)
             pygame.display.flip()
+        pygame.quit()
         return snake.links
 
