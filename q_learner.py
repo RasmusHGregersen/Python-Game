@@ -100,9 +100,9 @@ class Q_Learner(object):
             pos_x = '-' # on the same X
 
         if dist_y > 0:
-            pos_y = '3' # below snake
+            pos_y = '0' # below snake
         elif dist_y < 0:
-            pos_y = '2' # above snake
+            pos_y = '1' # above snake
         else:
             pos_y = '-' # on the same Y
             
