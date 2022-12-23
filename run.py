@@ -299,7 +299,8 @@ class SnakeGame():
     pixel_size=20
     game_over_font=None
     small_font=None
-
+    games_to_run=None
+    
     def __init__(self,bounds,timed,speed):
         self.bounds=bounds
         self.timed=timed
@@ -323,7 +324,7 @@ class SnakeGame():
         #Size of snake links/food defined
         pixel_size=self.pixel_size
         
-        death=None
+        
         game_count=0
 
 
@@ -365,9 +366,12 @@ class SnakeGame():
                         if event.key in key_dic.keys():
                             snake.control(key_dic[event.key])
             else:
-                key_dic={pygame.K_UP:"UP",pygame.K_DOWN:"DOWN",pygame.K_RIGHT:"RIGHT",pygame.K_LEFT:"LEFT"}
-                action=learner.choose_key(snake.body,food)
-                snake.control(action)
+                if game_count>self.games_to_run:
+                    run = False
+                else:
+                    key_dic={pygame.K_UP:"UP",pygame.K_DOWN:"DOWN",pygame.K_RIGHT:"RIGHT",pygame.K_LEFT:"LEFT"}
+                    action=learner.choose_key(snake.body,food)
+                    snake.control(action)
 
             #Snake moves
             snake.move()
@@ -384,7 +388,6 @@ class SnakeGame():
             #Checks for death
             if snake.check_tail() or snake.check_border() or timer==0:
                 timer=time_back
-                death="True"
                 if self.human_player==False:
                     snake.died()
                     food.eaten()
