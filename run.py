@@ -299,7 +299,7 @@ class SnakeGame():
     pixel_size=20
     game_over_font=None
     small_font=None
-    games_to_run=None
+    games_to_run=0
     
     def __init__(self,bounds,timed,speed):
         self.bounds=bounds
