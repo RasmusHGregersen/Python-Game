@@ -444,6 +444,7 @@ class SnakeGame():
                 time_rect=time.get_rect(center=(self.bounds[0]*(18/20),self.bounds[1]/20))
                 window.blit(time,time_rect)
             pygame.display.flip()
+        pygame.quit()
         return snake.links
 #Game initialised
 pygame.init()
