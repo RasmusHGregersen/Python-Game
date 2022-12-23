@@ -63,7 +63,7 @@ class Snake:
         mouth=self.body[-1]
         if mouth==(food.x,food.y):
             self.eat()
-            food.eaten()
+            food.eaten(self)
             return True
         return False
     
