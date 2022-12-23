@@ -9,7 +9,7 @@ import Food
 import random
 import pygame
 import Q_Learner
-import button
+import Button
 
 class SnakeGame():
     bounds= None
