@@ -18,18 +18,86 @@ class SnakeGame():
         self.speed=speed
         self.game_over_font=pygame.font.SysFont(f'calibri',self.bounds[1]//10,bold=True)
         self.small_font=pygame.font.SysFont(f'calibri',self.bounds[1]*2//30,italic=True)
-    def menu(self):
-        while True:
-            window=pygame.display.set_mode(self.bounds)
-            welcome_text=self.game_over_font.render(f'Snake: Main Menu',True, (255,255,255))
-            welcome_rect=welcome_text.get_rect(center=(self.bounds[0]//2,self.bounds[1]/3))
-            window.blit(welcome_text,welcome_rect)
-            new_game=button("grey",self.bounds[0]//2,self.bounds[0]*2/3,self.pixel_size*6,self.pixel_size*2,f'New Game')
-            #Event handler
+     def first_menu(self):
+        welcome_font=pygame.font.SysFont(f'Corbel',self.bounds[1]//14,bold=True)
+        
+        run=True
+        while run:
+            #Background color - filled with black
+            window.fill((0,0,0))
+            #Welcome text and buttons for exit game and new game made
+            welcome=welcome_font.render(f'Welcome to Snake game',True,(255,0,0))
+            welcome_rect=welcome.get_rect(center=(self.bounds[0]/2,self.bounds[1]/5))
+            window.blit(welcome,welcome_rect)
+            new_game_button=Button((220,220,220),self.bounds[0]/4,self.bounds[1]/3,self.bounds[0]/2,self.bounds[1]/4,'New game')
+            new_game_button.draw(window)
+            exit_button = Button((220,220,220),self.bounds[0]/4,self.bounds[1]*2/3,self.bounds[0]/2,self.bounds[1]/4,'Exit game')
+            exit_button.draw(window)
+            pygame.display.flip()
+            #Controls whether buttons have been pressed
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
+                    run = False
+                if event.type == pygame.MOUSEBUTTONUP:
+                    pos = pygame.mouse.get_pos()
+                    if exit_button.isOver(pos):
+                        run=False
+                    elif new_game_button.isOver(pos):
+                        self.game_menu()
+                        run=False
+        pygame.quit()
+    def game_menu(self):
+        info_text=pygame.font.SysFont(f'Corbel',self.bounds[1]*2//30,bold=True)
+        
+        run = True
+        while run:
             
+            window.fill((0,0,0))
+            #Buttons for selecting difficulty
+            difficulty=info_text.render(f'Difficulty {self.speed}',True,(255,0,0))
+            dif_rect=difficulty.get_rect(center=(self.bounds[0]/2,self.bounds[1]/5))
+            window.blit(difficulty,dif_rect)
+            b_1=Button((220,220,220),self.bounds[0]/6,self.bounds[1]/4,self.bounds[0]/6,self.bounds[1]/6,f'Dif 1')
+            b_1.draw(window)
+            b_2=Button((220,220,220),self.bounds[0]/2-self.bounds[0]/12,self.bounds[1]/4,self.bounds[0]/6,self.bounds[1]/6,f'Dif 2')
+            b_2.draw(window)
+            b_3=Button((220,220,220),self.bounds[0]*4/6,self.bounds[1]/4,self.bounds[0]/6,self.bounds[1]/6,f'Dif 3')
+            b_3.draw(window)
+            
+            #Button for selecting timed or not
+            t="Timed" if self.timed else "Not Timed"
+            time=info_text.render(f'{t}',True,(255,0,0))
+            time_rect=time.get_rect(center=(self.bounds[0]/2,self.bounds[1]*5/10))
+            window.blit(time,time_rect)
+            
+            yes_button=Button((220,220,220),self.bounds[0]/6,self.bounds[1]*11/20,self.bounds[0]/4,self.bounds[1]/6,'Timed') 
+            yes_button.draw(window)
+            no_button=Button((220,220,220),self.bounds[0]*58/100,self.bounds[1]*11/20,self.bounds[0]/4,self.bounds[1]/6,'Not') 
+            no_button.draw(window)
+            
+            start=Button((50,205,50),self.bounds[0]/6,self.bounds[1]*9/12,self.bounds[0]*2/3,self.bounds[1]/6,'Start Game')
+            start.draw(window)
+            pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                if event.type == pygame.MOUSEBUTTONUP:
+                    pos = pygame.mouse.get_pos()
+                    if b_1.isOver(pos):
+                        self.speed=1
+                    elif b_2.isOver(pos):
+                        self.speed=2
+                    elif b_3.isOver(pos):
+                        self.speed=3
+                    elif yes_button.isOver(pos):
+                        self.timed=True
+                    elif no_button.isOver(pos):
+                        self.timed=False
+                    elif start.isOver(pos):
+                        self.main_game()
+                        run=False
+        pygame.quit()
+
     def main_game(self):
         
 
@@ -89,22 +157,40 @@ class SnakeGame():
                 game_over_rect = game_over.get_rect(center=(self.bounds[0]/2, self.bounds[1]/3))
                 window.blit(game_over,game_over_rect)
 
-                    #Pres any key to play again
+                #Press any key to play again
                 go_again=self.small_font.render(f'Press any key to go again!',True,(255,0,0))
                 go_again_rect=go_again.get_rect(center=(self.bounds[0]/2,self.bounds[1]*2/3))
                 window.blit(go_again,go_again_rect)
                 pygame.display.flip()
                 wait=True
-                while wait:
-                    #Checks for input
-                    for event in pygame.event.get():
-                        if event.type==pygame.KEYDOWN:
-                            snake.died()
-                            food.eaten(snake)
-                            wait=False
-                        if event.type==pygame.QUIT:
-                            run = False
-                            wait = False
+                #Game over printed
+                    game_over=game_over_font.render(f'Game over!',True,(255,0,0))
+                    game_over_rect = game_over.get_rect(center=(self.bounds[0]/2, self.bounds[1]/6))
+                    window.blit(game_over,game_over_rect)
+
+                    #Press to try again or go back to main menu
+                    again_button=Button((220,220,220),self.bounds[0]/4,self.bounds[1]/3,self.bounds[0]/2,self.bounds[1]/4,'Go again')
+                    again_button.draw(window)
+                    back_button = Button((220,220,220),self.bounds[0]/4,self.bounds[1]*2/3,self.bounds[0]/2,self.bounds[1]/4,'Back to menu')
+                    back_button.draw(window)
+                    pygame.display.flip()
+                    wait=True
+                    while wait:
+                        #Checks for input
+                        for event in pygame.event.get():
+                            if event.type == pygame.MOUSEBUTTONUP:
+                                pos = pygame.mouse.get_pos()
+                                if back_button.isOver(pos):
+                                    run=False
+                                    wait=False
+                                    self.first_menu()
+                                elif again_button.isOver(pos):
+                                    wait=False
+                                    snake.died()
+                                    food.eaten(snake)
+                            if event.type==pygame.QUIT:
+                                wait=False
+                                run = False
 
             #Background color - filled with black
             window.fill((0,0,0))
