@@ -7,7 +7,7 @@
 import random 
 import Snake 
 
-class Food():
+class Food:
     pixel_size = None
     color = (255,0,0)
     x = 0
