@@ -30,7 +30,7 @@ class SnakeEnv(gym.Env):
     def render(self, mode,bounds,timed,speed,max_episodes, close=False):
         if mode=="human":
             #self.human_game=SnakeGame(bounds,timed,speed)
-            SnakeGame(bounds,timed,speed).main_game()
+            SnakeGame(bounds,timed,speed).first_menu()
         else:
             #self.q_game=Q_Learn_SnakeGame(bounds,timed,speed,max_episodes)
             Q_Learn_SnakeGame(bounds,timed,speed,max_episodes).q_learn_main_game()
