@@ -35,12 +35,15 @@ class Q_Learn_SnakeGame(SnakeGame):
 
         ax1.bar(game_range, total_score,width=2,snap=False)
         ax1.set_title("Total Scores in each episodes")
-        ax1.set_xticks(game_range)
+        if len(game_range)<=10:
+            ax1.set_xticks(game_range)
         ax1.set_xlabel("50-game Episodes")
         ax1.set_ylabel("Total Score")
         ax2.bar(game_range, highest_score,width=2,snap=False)
         ax2.set_xticks(game_range)
         ax2.set_title("HIghest Scores in each episodes")
+        if len(game_range)<=10:
+            ax2.set_xticks(game_range)
         ax2.set_xlabel("50-game Episodes")
         ax2.set_ylabel("Highest Score")
 
