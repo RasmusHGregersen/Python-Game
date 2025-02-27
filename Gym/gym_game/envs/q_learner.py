@@ -13,7 +13,7 @@ class Q_Learner(object):
         self.learning_rate = 0.1      # Lowered from 0.5
         self.discount = 0.9           # Values future rewards more
         self.epsilon = 1.0            # Start fully exploring
-        self.epsilon_decay = 0.995    # Exponential decay rate per episode
+        self.epsilon_decay = 0.9995    # Exponential decay rate per episode
         self.epsilon_min = 0.01       # Minimum epsilon
 
         # Load or initialize Q-table
@@ -47,9 +47,9 @@ class Q_Learner(object):
         return q_table
 
     def get_state_key(self, state):
-    # Include the heading in the key so that states with different headings are distinct.
-        return str((state.position[0], state.position[1], state.relative_state, state.wall_distance, state.heading))
-
+        # Create a consistent string key including distance to food info and wall distance.
+        # Here, state.position is (dist_x, dist_y), and we now include state.wall_distance.
+        return str((state.position[0], state.position[1], state.relative_state))
 
     def ensure_state_in_qtable(self, state):
         key = self.get_state_key(state)
@@ -77,7 +77,6 @@ class Q_Learner(object):
     def UpdateQValues(self, reason):
         """
         reason = True if the snake died at the last move, else None/False.
-        We'll apply a heavier penalty for death and a small negative reward each step.
         """
         # Reverse the log so we can do backward updates
         activity_log = self.activity_log[::-1]
@@ -90,7 +89,7 @@ class Q_Learner(object):
                 key_term = self.ensure_state_in_qtable(terminal_state)
 
                 # Heavier penalty for death
-                reward = -5
+                reward = -3
                 old_value = self.q_table[key_term][action_terminal]
                 self.q_table[key_term][action_terminal] = (
                     (1 - self.learning_rate) * old_value
@@ -107,9 +106,7 @@ class Q_Learner(object):
                 key1 = self.ensure_state_in_qtable(state1)
 
                 # Compute reward:
-                # Start with a small negative each step
-                reward = -0.01
-
+                reward = 0
                 # If the snake ate the food
                 if state0.food != state1.food:
                     reward += 1.0
@@ -131,17 +128,12 @@ class Q_Learner(object):
                             self.learning_rate * (reward + self.discount * next_max)
                 self.q_table[key0][action0] = new_value
 
-        # After finishing an episode, decay epsilon (in your environment code)
-        # For example:
-        # if self.epsilon > self.epsilon_min:
-        #     self.epsilon *= self.epsilon_decay
-
     def distance_from_food(self, snake, food):
-        # Use snake.body[-1] to get the snake head
-        snake_head = snake.body[-1]
+        snake_head = snake[-1]
         dist_x = food.x - snake_head[0]
         dist_y = food.y - snake_head[1]
 
+        # Relative horizontal position
         if dist_x > 0:
             pos_x = '1'
         elif dist_x < 0:
@@ -149,6 +141,7 @@ class Q_Learner(object):
         else:
             pos_x = '-'
 
+        # Relative vertical position
         if dist_y > 0:
             pos_y = '0'
         elif dist_y < 0:
@@ -158,9 +151,15 @@ class Q_Learner(object):
         return dist_x, dist_y, pos_x, pos_y
 
     def FutureState(self, snake, food):
+        """
+        Create a state representation that includes:
+         - The distance (dist_x, dist_y) from the snake head to the food.
+         - A positional indicator (pos_x, pos_y) for the food relative to the snake.
+         - A 4-character string (relative_state) indicating obstacles around the snake.
+         - The food object (for detection of eating).
+        """
         dist_x, dist_y, pos_x, pos_y = self.distance_from_food(snake, food)
-        # Get the snake head from snake.body instead of snake[-1]
-        snake_head = snake.body[-1]
+        snake_head = snake[-1]
         possible_directions = [
             (snake_head[0] - self.pixel_size, snake_head[1]),
             (snake_head[0] + self.pixel_size, snake_head[1]),
@@ -172,20 +171,11 @@ class Q_Learner(object):
         for direction in possible_directions:
             out_y = direction[1] >= self.border_width or direction[1] < 0
             out_x = direction[0] >= self.border_height or direction[0] < 0
-            check_tail = direction in snake.body[:-1]
+            check_tail = direction in snake[:-1]
             if out_y or out_x or check_tail:
                 surrounding_list.append('1')
             else:
                 surrounding_list.append('0')
 
         relative_state = ''.join(surrounding_list)
-        wall_distance = min(
-            snake_head[0],
-            self.border_width - snake_head[0],
-            snake_head[1],
-            self.border_height - snake_head[1]
-        )
-        # Use snake.direction as before (this is an attribute of the Snake object)
-        heading = snake.direction
-
-        return State_DataClass((dist_x, dist_y), (pos_x, pos_y), relative_state, food, wall_distance, heading)
+        return State_DataClass((dist_x, dist_y), (pos_x, pos_y), relative_state, food)

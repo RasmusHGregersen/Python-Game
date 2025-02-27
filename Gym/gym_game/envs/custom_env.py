@@ -31,7 +31,9 @@ class SnakeEnv(gym.Env):
         if mode=="human":
             #self.human_game=SnakeGame(bounds,timed,speed)
             SnakeGame(bounds,timed,speed).first_menu()
-        else:
+        elif mode == "AI":
             #self.q_game=Q_Learn_SnakeGame(bounds,timed,speed,max_episodes)
             Q_Learn_SnakeGame(bounds,timed,speed,max_episodes).q_learn_main_game()
+        else:
+            Q_Learn_SnakeGame(bounds,timed,speed,max_episodes).demo_game()
 

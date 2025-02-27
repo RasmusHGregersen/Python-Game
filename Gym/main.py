@@ -6,7 +6,7 @@ import argparse
 
 parser = argparse.ArgumentParser('My program')
 
-parser.add_argument('-m', '--mode',choices=["AI","human"],required=True)
+parser.add_argument('-m', '--mode',choices=["AI","human", "demo"],required=True)
 parser.add_argument('-s', '--speed',type=int,default=1)
 parser.add_argument('-me', '--max_episodes',type=int,default=100)
 args = parser.parse_args()

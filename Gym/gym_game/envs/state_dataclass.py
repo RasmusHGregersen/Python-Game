@@ -6,4 +6,3 @@ class State_DataClass:
     position: tuple
     relative_state: str
     food: tuple
-    wall_distance: float

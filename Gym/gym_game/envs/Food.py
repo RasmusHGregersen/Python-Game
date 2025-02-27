@@ -10,8 +10,8 @@ class Food(Object):
     def eaten(self,snake):
         x_pixels=(self.borders[0])/self.pixel_size
         y_pixels=(self.borders[1])/self.pixel_size
-        self.x=random.randint(0,x_pixels-1)*self.pixel_size
-        self.y=random.randint(0,y_pixels-1)*self.pixel_size
+        self.x=random.randint(3,x_pixels-3)*self.pixel_size
+        self.y=random.randint(3,y_pixels-3)*self.pixel_size
         while (self.x,self.y) in snake.body:
-            self.x=random.randint(0,x_pixels-1)*self.pixel_size
-            self.y=random.randint(0,y_pixels-1)*self.pixel_size
+            self.x=random.randint(3,x_pixels-3)*self.pixel_size
+            self.y=random.randint(3,y_pixels-3)*self.pixel_size
